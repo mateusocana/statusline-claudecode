@@ -121,15 +121,24 @@ if awk "BEGIN{exit !($ctx_int <= 60)}"; then  # ← altere o 60
 
 Substitua qualquer emoji na linha `printf` no final do script. Cada segmento tem comentário identificando sua posição.
 
-### Remoção do path do Maestri
+### Remoção do path do Maestri.app (macOS)
 
-Se você usa o [Maestri](https://maestri.app), o script remove automaticamente o `.maestri/roles/<uuid>` do caminho exibido, mostrando o nome real do projeto. Isso é feito por:
+O [Maestri.app](https://maestri.app) é um orquestrador de agentes IA para macOS. Quando ele executa uma sessão, injeta um diretório de role dentro do projeto com o padrão:
+
+```
+<seu-projeto>/.maestri/roles/<uuid>/
+```
+
+Sem o strip, a status line mostraria algo como `Projects/meu-app/.maestri/roles/70356567-c0c2-4bbd-b1f2-de8de8ec2a9b` em vez de `Projects/meu-app`.
+
+O script remove automaticamente esse sufixo:
 
 ```bash
+# Strips .maestri/roles/<uuid> injected by Maestri.app (macOS)
 rel=$(printf '%s' "$rel" | sed 's|/\.maestri/roles/[^/]*.*||')
 ```
 
-Remova essa linha se não usar o Maestri.
+Se não usar o Maestri.app, remova essa linha. Não afeta projetos sem o diretório `.maestri/`.
 
 ---
 

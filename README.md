@@ -1,61 +1,61 @@
 # statusline-claudecode
 
-> Custom status line for [Claude Code](https://claude.ai/code) — shows model, git branch, project path, context window usage, and rate limit bars in real time.
+> Status line customizada para o [Claude Code](https://claude.ai/code) — mostra modelo, branch git, caminho do projeto, barra de uso do contexto e barras de rate limit em tempo real.
 
-![status line preview](https://img.shields.io/badge/claude-code-orange?style=flat-square) ![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows%20Git%20Bash-blue?style=flat-square)
+![status line preview](https://img.shields.io/badge/claude-code-orange?style=flat-square) ![platform](https://img.shields.io/badge/plataforma-macOS%20%7C%20Linux%20%7C%20Windows%20Git%20Bash-blue?style=flat-square)
 
 ---
 
 ## Preview
 
 ```
-🐙 claude-sonnet-4-6 | 🌿 main | 📁 Projects/my-app | 🟢 ██░░░░░░░░ 15% | 🧊 5h:22% (13/05 19h) | 🟡 ███████░░░ 68% | 🔢 7d:68% (17/05 00h)
+🐙 claude-sonnet-4-6 | 🌿 main | 📁 Projects/meu-app | 🟢 ██░░░░░░░░ 15% | 🧊 5h:22% (13/05 19h) | 🟡 ███████░░░ 68% | 🔢 7d:68% (17/05 00h)
 ```
 
-Color changes automatically as usage grows:
+As cores mudam automaticamente conforme o uso aumenta:
 
-| Range | Color | Meaning |
-|-------|-------|---------|
-| ≤ 60% | 🟢 Green | Safe |
-| 61–80% | 🟡 Yellow | Caution |
-| > 80% | 🔴 Red | Critical |
-
----
-
-## What it shows
-
-| Segment | Description |
-|---------|-------------|
-| `🐙 Model` | Active Claude model name |
-| `🌿 Branch` | Current git branch (or `no-git` if outside a repo) |
-| `📁 Path` | Relative project path from `~/` |
-| `[bar] %` | Context window usage — 10-block bar + percentage |
-| `🧊 5h:XX% (date)` | 5-hour rate limit usage + reset time in local timezone |
-| `🟢/🟡/🔴 [bar] %` | 7-day rate limit usage — bar + percentage |
-| `🔢 7d:XX% (date)` | 7-day rate limit reset time in local timezone |
+| Faixa | Cor | Significado |
+|-------|-----|-------------|
+| ≤ 60% | 🟢 Verde | Tranquilo |
+| 61–80% | 🟡 Amarelo | Atenção |
+| > 80% | 🔴 Vermelho | Crítico |
 
 ---
 
-## Requirements
+## O que exibe
 
-- **Claude Code** CLI installed (`claude` command available)
-- **bash** (macOS built-in, Linux, or Windows Git Bash)
-- **git** (for branch detection)
-- **sed** and **awk** (both macOS/Linux built-in)
-- No `jq` required — parser uses only native shell tools
+| Segmento | Descrição |
+|----------|-----------|
+| `🐙 Model` | Nome do modelo Claude ativo |
+| `🌿 Branch` | Branch git atual (ou `no-git` se fora de um repositório) |
+| `📁 Path` | Caminho relativo do projeto a partir de `~/` |
+| `[barra] %` | Uso da janela de contexto — barra de 10 blocos + porcentagem |
+| `🧊 5h:XX% (data)` | Uso do rate limit de 5 horas + horário de reset no fuso local |
+| `🟢/🟡/🔴 [barra] %` | Uso do rate limit de 7 dias — barra + porcentagem |
+| `🔢 7d:XX% (data)` | Horário de reset do rate limit de 7 dias no fuso local |
 
 ---
 
-## Installation
+## Requisitos
 
-### 1. Copy the script
+- **Claude Code** instalado (comando `claude` disponível)
+- **bash** (nativo no macOS, Linux ou Windows Git Bash)
+- **git** (para detecção de branch)
+- **sed** e **awk** (nativos no macOS e Linux)
+- Sem dependência de `jq` — usa apenas ferramentas nativas do shell
+
+---
+
+## Instalação
+
+### 1. Copie o script
 
 ```bash
 cp statusline-command.sh ~/.claude/statusline-command.sh
 chmod +x ~/.claude/statusline-command.sh
 ```
 
-Or with `curl`:
+Ou via `curl`:
 
 ```bash
 curl -o ~/.claude/statusline-command.sh \
@@ -63,9 +63,9 @@ curl -o ~/.claude/statusline-command.sh \
 chmod +x ~/.claude/statusline-command.sh
 ```
 
-### 2. Configure `~/.claude/settings.json`
+### 2. Configure o `~/.claude/settings.json`
 
-Add the `statusline` block to your settings file:
+Adicione o bloco `statusline` ao seu arquivo de configuração:
 
 ```json
 {
@@ -76,104 +76,104 @@ Add the `statusline` block to your settings file:
 }
 ```
 
-If you already have a `settings.json`, merge — don't replace. See `settings.json.example` for the minimal snippet.
+Se já tiver um `settings.json`, mescle o bloco — não substitua o arquivo inteiro. Veja `settings.json.example` para o trecho mínimo necessário.
 
-### 3. Restart Claude Code
+### 3. Reinicie o Claude Code
 
-Close and reopen the terminal / IDE extension. The status line appears at the bottom of the Claude Code interface.
+Feche e abra novamente o terminal ou a extensão do IDE. A status line aparece na parte inferior da interface do Claude Code.
 
 ---
 
-## Customization
+## Customização
 
-### Timezone
+### Fuso horário
 
-The reset timestamps default to `America/Sao_Paulo`. Edit the two lines that call `date -r`:
+O padrão é `America/Sao_Paulo`. Para alterar, edite as duas linhas que chamam `date -r`:
 
 ```bash
-# Change TZ= to your timezone, e.g. America/New_York, Europe/London, Asia/Tokyo
+# Altere TZ= para o seu fuso, ex: America/New_York, Europe/London, Asia/Tokyo
 TZ=America/Sao_Paulo date -r "$fh_ts" "+%d/%m %Hh"
 ```
 
-### Date format
+### Formato de data
 
-Change the `date` format string. Default: `%d/%m %Hh` → `13/05 19h`
+Altere a string de formato do `date`. Padrão: `%d/%m %Hh` → `13/05 19h`
 
-Some alternatives:
+Algumas alternativas:
 
-| Format | Output |
-|--------|--------|
-| `%d/%m %Hh` | `13/05 19h` (default) |
+| Formato | Saída |
+|---------|-------|
+| `%d/%m %Hh` | `13/05 19h` (padrão) |
 | `%H:%M` | `19:30` |
 | `%b %d %H:%M` | `May 13 19:30` |
 | `%Y-%m-%d %H:%M` | `2026-05-13 19:30` |
 
-### Color thresholds
+### Limites de cor
 
-Edit the `awk` conditions in sections 5 and 7:
+Edite as condições `awk` nas seções 5 e 7:
 
 ```bash
-# Default thresholds: ≤60 green | ≤80 yellow | >80 red
-if awk "BEGIN{exit !($ctx_int <= 60)}"; then  # ← change 60
+# Padrão: ≤60 verde | ≤80 amarelo | >80 vermelho
+if awk "BEGIN{exit !($ctx_int <= 60)}"; then  # ← altere o 60
 ```
 
-### Emoji / icons
+### Emojis / ícones
 
-Replace any emoji at the bottom `printf` call. The segments are labeled with comments so they're easy to find.
+Substitua qualquer emoji na linha `printf` no final do script. Cada segmento tem comentário identificando sua posição.
 
-### Maestri role path stripping
+### Remoção do path do Maestri
 
-If you use [Maestri](https://maestri.app), the script automatically strips `.maestri/roles/<uuid>` from the path display so it shows the real project name, not the role runner directory. This is handled by:
+Se você usa o [Maestri](https://maestri.app), o script remove automaticamente o `.maestri/roles/<uuid>` do caminho exibido, mostrando o nome real do projeto. Isso é feito por:
 
 ```bash
 rel=$(printf '%s' "$rel" | sed 's|/\.maestri/roles/[^/]*.*||')
 ```
 
-Remove that line if you don't use Maestri.
+Remova essa linha se não usar o Maestri.
 
 ---
 
-## How it works
+## Como funciona
 
-Claude Code feeds a JSON payload to the script via stdin on every refresh. The script parses these fields using only `sed` and `awk` (no external dependencies):
+O Claude Code envia um payload JSON para o script via stdin a cada refresh. O script extrai os seguintes campos usando apenas `sed` e `awk` (sem dependências externas):
 
 ```
-model.display_name          → model name
-workspace.current_dir       → working directory
-context_window.used_percentage
-rate_limits.five_hour.used_percentage
-rate_limits.five_hour.resets_at
-rate_limits.seven_day.used_percentage
-rate_limits.seven_day.resets_at
+model.display_name                    → nome do modelo
+workspace.current_dir                 → diretório de trabalho
+context_window.used_percentage        → % de contexto usado
+rate_limits.five_hour.used_percentage → % do limite de 5h
+rate_limits.five_hour.resets_at       → timestamp de reset do limite de 5h
+rate_limits.seven_day.used_percentage → % do limite de 7d
+rate_limits.seven_day.resets_at       → timestamp de reset do limite de 7d
 ```
 
-The `context_window` block is isolated before `rate_limits` to avoid matching the wrong `used_percentage` — all three blocks share the same field name.
+O bloco `context_window` é isolado antes de `rate_limits` para evitar capturar o campo `used_percentage` errado — os três blocos compartilham o mesmo nome de campo.
 
 ---
 
-## Troubleshooting
+## Solução de problemas
 
-**Status line doesn't appear**
+**Status line não aparece**
 
-- Verify the path: `ls -la ~/.claude/statusline-command.sh`
-- Check it's executable: `chmod +x ~/.claude/statusline-command.sh`
-- Validate the JSON: `python3 -m json.tool ~/.claude/settings.json`
+- Verifique o caminho: `ls -la ~/.claude/statusline-command.sh`
+- Confirme que é executável: `chmod +x ~/.claude/statusline-command.sh`
+- Valide o JSON: `python3 -m json.tool ~/.claude/settings.json`
 
-**Model shows "unknown"**
+**Modelo aparece como "unknown"**
 
-The JSON field `model.display_name` may have a different path in your version. Run the script manually with sample input:
+O campo `model.display_name` pode ter um caminho diferente na sua versão. Teste o script manualmente:
 
 ```bash
-echo '{"model":{"display_name":"test-model"}}' | bash ~/.claude/statusline-command.sh
+echo '{"model":{"display_name":"teste-modelo"}}' | bash ~/.claude/statusline-command.sh
 ```
 
-**Reset times show `--`**
+**Horários de reset aparecem `--`**
 
-The `resets_at` field is a Unix timestamp. Some Claude plans may not include it. The script falls back to `--` gracefully.
+O campo `resets_at` é um timestamp Unix. Alguns planos do Claude podem não incluí-lo. O script usa `--` como fallback sem quebrar.
 
-**Wrong timezone**
+**Fuso horário errado**
 
-Update `TZ=America/Sao_Paulo` to your IANA timezone. List all available:
+Atualize `TZ=America/Sao_Paulo` para o seu fuso IANA. Liste todos os disponíveis:
 
 ```bash
 ls /usr/share/zoneinfo
@@ -181,17 +181,17 @@ ls /usr/share/zoneinfo
 
 ---
 
-## Credits
+## Créditos
 
-Based on the original prompt by [@geovanyferreira](https://gist.github.com/geovanyferreira/787fee2aaf01a66c98ca477f230c70fa), with extended features:
+Baseado no prompt original de [@geovanyferreira](https://gist.github.com/geovanyferreira/787fee2aaf01a66c98ca477f230c70fa), com funcionalidades adicionais:
 
-- 7-day rate limit bar + color indicator
-- Reset timestamps for both 5h and 7d limits in local timezone
-- Maestri role path stripping
-- Full inline documentation
+- Barra do rate limit de 7 dias com indicador de cor
+- Timestamps de reset para 5h e 7d no fuso local
+- Remoção automática do path de roles do Maestri
+- Documentação inline completa no script
 
 ---
 
-## License
+## Licença
 
 MIT

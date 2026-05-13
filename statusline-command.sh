@@ -53,7 +53,8 @@ rel=$(printf '%s' "$cwd" | sed -n 's|.*/[Uu]sers/[^/]*/||p')
 [ -z "$rel" ] && rel=$(printf '%s' "$cwd" | sed 's|.*/||')
 [ -z "$rel" ] && rel="~"
 
-# Strip .maestri/roles/<uuid> subpaths injected by Maestri role runner
+# Maestri.app (macOS) injects .maestri/roles/<uuid> into the CWD — strip it so
+# the status line shows the real project path, not the role runner directory.
 rel=$(printf '%s' "$rel" | sed 's|/\.maestri/roles/[^/]*.*||')
 
 # ── 5. Context window % ───────────────────────────────────────────────────────

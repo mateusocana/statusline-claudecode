@@ -1,0 +1,6 @@
+{
+  "statusline": {
+    "command": "bash ~/.claude/statusline-command.sh",
+    "refreshInterval": 2
+  }
+}

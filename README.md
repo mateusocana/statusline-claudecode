@@ -65,11 +65,12 @@ chmod +x ~/.claude/statusline-command.sh
 
 ### 2. Configure o `~/.claude/settings.json`
 
-Adicione o bloco `statusline` ao seu arquivo de configuração:
+Adicione o bloco `statusLine` ao seu arquivo de configuração:
 
 ```json
 {
-  "statusline": {
+  "statusLine": {
+    "type": "command",
     "command": "bash ~/.claude/statusline-command.sh",
     "refreshInterval": 2
   }

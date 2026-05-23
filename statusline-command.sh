@@ -16,6 +16,15 @@
 
 input=$(cat)
 
+# ── Portable timestamp formatter (macOS BSD date + Linux GNU date + Git Bash) ─
+_fmt_ts() {
+  local ts="$1" fmt="$2"
+  # BSD date (macOS): date -r <unix_ts>
+  # GNU date (Linux/Git Bash): date -d @<unix_ts>
+  { TZ=America/Sao_Paulo date -r "$ts" "$fmt" 2>/dev/null || \
+    TZ=America/Sao_Paulo date -d "@$ts" "$fmt" 2>/dev/null; } || printf '%s' "--"
+}
+
 # ANSI color codes
 DIM=$'\033[90m'
 GREEN=$'\033[32m'
@@ -98,11 +107,8 @@ fh_int=$(awk "BEGIN{printf \"%d\", $fh_pct + 0.5}")
 fh_ts=$(printf '%s' "$fh_block" \
   | sed -E -n 's/.*"resets_at"[[:space:]]*:[[:space:]]*([0-9]+).*/\1/p' \
   | head -1)
-fh_reset=""
-if [ -n "$fh_ts" ]; then
-  fh_reset=$(TZ=America/Sao_Paulo date -r "$fh_ts" "+%d/%m %Hh" 2>/dev/null)
-fi
-[ -z "$fh_reset" ] && fh_reset="--"
+fh_reset="--"
+[ -n "$fh_ts" ] && fh_reset=$(_fmt_ts "$fh_ts" "+%d/%m %Hh")
 
 # ── 7. 7-day rate limit ───────────────────────────────────────────────────────
 sd_block=$(printf '%s' "$input" | sed 's/.*"seven_day"[^{]*{//' | sed 's/}.*//')
@@ -115,11 +121,8 @@ sd_int=$(awk "BEGIN{printf \"%d\", $sd_pct + 0.5}")
 sd_ts=$(printf '%s' "$sd_block" \
   | sed -E -n 's/.*"resets_at"[[:space:]]*:[[:space:]]*([0-9]+).*/\1/p' \
   | head -1)
-sd_reset=""
-if [ -n "$sd_ts" ]; then
-  sd_reset=$(TZ=America/Sao_Paulo date -r "$sd_ts" "+%d/%m %Hh" 2>/dev/null)
-fi
-[ -z "$sd_reset" ] && sd_reset="--"
+sd_reset="--"
+[ -n "$sd_ts" ] && sd_reset=$(_fmt_ts "$sd_ts" "+%d/%m %Hh")
 
 # 7d progress bar (same 10-block logic)
 sd_filled=$(awk "BEGIN{v=int($sd_int*10/100); if(v>10)v=10; if(v<0)v=0; print v}")

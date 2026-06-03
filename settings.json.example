@@ -1,7 +1,7 @@
 {
   "statusLine": {
     "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh",
-    "refreshInterval": 2
+    "command": "node ~/.claude/statusline-command.js",
+    "refreshInterval": 1
   }
 }

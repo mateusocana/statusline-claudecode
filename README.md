@@ -36,6 +36,50 @@ As cores mudam automaticamente conforme o uso aumenta:
 
 ---
 
+## Versão Node (recomendada)
+
+Além do script Bash original, o repositório inclui **`statusline-command.js`** — uma reimplementação em Node.js com o **layout idêntico**, recomendada principalmente no Windows.
+
+**Por que usar a versão Node:**
+
+| Vantagem | Detalhe |
+|----------|---------|
+| ⚡ **~14x mais rápida no Windows** | O Bash forka `sed`/`awk`/`git` dezenas de vezes (~2.8s por render no Windows). O Node faz tudo em **1 processo** (~0.2s). |
+| 🌍 **Fuso horário automático** | Segue o fuso do sistema operacional. Viajou pra outro país? O horário de reset se ajusta sozinho no próximo render — sem editar nada. |
+| 🧭 **Override opcional de fuso** | Variável de ambiente `CLAUDE_STATUSLINE_TZ` (zona IANA, ex: `America/Sao_Paulo`) força um fuso fixo. Sem ela = segue o SO. |
+| 📦 **Cross-platform sem `sed`/`awk`** | `JSON.parse` nativo + `Intl` (ICU) para datas. Mesmo comportamento no Windows, macOS e Linux. |
+| 🔧 **1 comando portável** | `node ~/.claude/statusline-command.js` funciona nos dois OS (no Windows o Claude Code roda o comando via Git Bash, que expande o `~`). |
+
+**Requisito extra:** Node.js 14+ (com ICU full — padrão nos builds oficiais).
+
+### Instalação (Node)
+
+```bash
+# 1. Copie o script
+cp statusline-command.js ~/.claude/statusline-command.js
+
+# (ou via curl)
+curl -o ~/.claude/statusline-command.js \
+  https://raw.githubusercontent.com/mateusocana/statusline-claudecode/main/statusline-command.js
+```
+
+```json
+// 2. ~/.claude/settings.json — bloco statusLine
+{
+  "statusLine": {
+    "type": "command",
+    "command": "node ~/.claude/statusline-command.js",
+    "refreshInterval": 1
+  }
+}
+```
+
+3. Reinicie o Claude Code.
+
+> Para travar um fuso fixo (em vez de seguir o SO), defina `CLAUDE_STATUSLINE_TZ` no seu ambiente, ex: `export CLAUDE_STATUSLINE_TZ=America/Sao_Paulo`.
+
+---
+
 ## Requisitos
 
 - **Claude Code** instalado (comando `claude` disponível)
